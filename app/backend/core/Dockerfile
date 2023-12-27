@@ -1,20 +1,22 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# Usa a imagem oficial do Python no Docker Hub como imagem base
+FROM python:latest
 
-# Set the working directory to /app/backend
+# Define o diretório de trabalho como /app/backend
 WORKDIR /app/backend/core
 
-# Copy the current directory contents into the container at /app/backend/core
-COPY . .
+# Copia apenas os arquivos pyproject.toml e poetry.lock para aproveitar o processo de construção PEP 517 do Poetry
+COPY ./app/backend/core/pyproject.toml ./app/backend/core/poetry.lock ./
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+# Instala o Poetry e as dependências do projeto
+RUN pip install --no-cache-dir poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-interaction --no-ansi
 
-# Make port 5000 available to the world outside this container
-EXPOSE 5000
+# Copia o conteúdo do diretório local /app/backend para o contêiner em /app/backend
+COPY ./app/backend /app/backend
 
-# Define environment variable
-ENV NAME World
+# Expõe a porta 5000 para o host
+EXPOSE 80
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Comando executado ao iniciar o contêiner
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

@@ -11,12 +11,13 @@ O aplicativo permitirá aos usuários visualizar e comparar o desempenho de dife
 ## Tecnologias Utilizadas
 
 - **Backend:**
-  - Flask (Python)
+  - FastAPI (Python)
   - SQLAlchemy (ORM para PostgreSQL)
   - PyMongo (Interação com MongoDB)
 
 - **Frontend:**
   - React.js
+  - Nginx
 
 - **Banco de Dados:**
   - PostgreSQL (Dados de Mercado)
